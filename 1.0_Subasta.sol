@@ -12,33 +12,32 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 contract Subasta {
-
     struct Offer {
         address user;
-        uint value;     
+        uint256 value;
     }
 
     Offer lastUser;
-    uint auctionClosing;    
+    uint256 auctionClosing;
     string message;
 
-    mapping(address => uint) lastOffer;
+    mapping(address => uint256) lastOffer;
 
     constructor() {
         auctionClosing = block.timestamp + 60 seconds;
     }
 
-    function setOffer(uint value) public {
+    function setOffer(uint256 value) public {
         // Tiempo límite 1 min.
         if (block.timestamp <= auctionClosing) {
             // Una oferta por usuario.
-            if (lastUser.user != msg.sender ) {
+            if (lastUser.user != msg.sender) {
                 // Solo guardo la mayor oferta.
                 if (lastUser.value < value) {
                     lastUser.user = msg.sender;
-                    lastUser.value = value;            
+                    lastUser.value = value;
                     lastOffer[msg.sender] = block.timestamp;
-                    message = "Realizaste una ofertar.";                
+                    message = "Realizaste una ofertar.";
                 } else {
                     message = "No superaste la mejor oferta.";
                 }
@@ -47,10 +46,19 @@ contract Subasta {
             }
         } else {
             message = "La subasta termino.";
-        }          
+        }
     }
-    
-    function getOffer() public view returns(address, uint, uint, string memory) {
+
+    function getOffer()
+        public
+        view
+        returns (
+            address,
+            uint256,
+            uint256,
+            string memory
+        )
+    {
         return (
             lastUser.user,
             lastUser.value,
