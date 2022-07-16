@@ -35,22 +35,19 @@ contract Instituto {
         _owner = msg.sender;
     }
 
-    function cargaDeNota(address alumno, uint nota) public UnicamenteInstituto { 
-        require(nota >= 0 && nota <= 10, "La nota ingresada es incorrecta");
+    function cargaDeNota(address alumno, uint nota) NotaValida(nota) public UnicamenteInstituto {         
         Notas[alumno].push(nota);
         emit NotaCargada(alumno, nota, "Se cargo una nota a un alumno");
     }
 
-    function notasDeAlumno(address alumno) public view returns (address, uint[] memory notas) {
-        require(alumno == msg.sender || _owner == msg.sender, "No tienes permisos suficientes");
+    function notasDeAlumno(address alumno) public view UnicamenteAlumnoInstituto(alumno) returns (address, uint[] memory notas) {        
         return (
             alumno, 
             Notas[alumno]
         );
     }
 
-    function promedioDeAlumno(address alumno) public view returns (address, uint notas) {
-        require(alumno == msg.sender || _owner == msg.sender, "No tienes permisos suficientes");
+    function promedioDeAlumno(address alumno) public view UnicamenteAlumnoInstituto(alumno) returns (address, uint notas) {       
         uint sum;
         for (uint i = 0; i < Notas[alumno].length; i++) {
             sum = sum +  Notas[alumno][i];
@@ -62,8 +59,7 @@ contract Instituto {
     }    
 
     // Usando SafeMath
-    function SafeMath_promedioDeAlumno(address alumno) public view returns (address, uint notas) {
-        require(alumno == msg.sender || _owner == msg.sender, "No tienes permisos suficientes");
+    function SafeMath_promedioDeAlumno(address alumno) public view UnicamenteAlumnoInstituto(alumno) returns (address, uint notas) {        
         uint sum;
         for (uint i = 0; i < Notas[alumno].length; i++) {
             sum = sum.add(Notas[alumno][i]);
@@ -77,6 +73,16 @@ contract Instituto {
     // Validaciones
     modifier UnicamenteInstituto {
         require(_owner == msg.sender, "No tienes permisos de administrador");
+        _;
+    }
+
+    modifier UnicamenteAlumnoInstituto(address alumno) {
+        require(alumno == msg.sender || _owner == msg.sender, "No tienes permisos suficientes");
+        _;
+    }
+
+    modifier NotaValida(uint nota) {
+        require(nota >= 0 && nota <= 10, "La nota ingresada es incorrecta");
         _;
     }
 }
