@@ -8,7 +8,12 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-contract Circle {
+interface iGeometric {
+    function getPerimeter() external view returns(uint);
+    function getArea() external view returns(uint);
+}
+
+contract Circle is iGeometric {
 
     uint private _radio;
 
@@ -21,13 +26,13 @@ contract Circle {
     }
 
     // p = 2*pi*radio
-    function getPerimeter() withRadio external view returns(uint) {
+    function getPerimeter() withRadio external override view returns(uint) {
         uint _pi = 3;
         return 2 * _pi * _radio;
     }
 
     // a = pi*radio^2
-    function getArea() withRadio external view returns(uint) {
+    function getArea() withRadio external override view returns(uint) {
         uint _pi = 3;
         return _pi * (_radio * _radio);
     }
@@ -38,7 +43,7 @@ contract Circle {
     }
 }
 
-contract Square {
+contract Square is iGeometric {
 
     uint private _side;
 
@@ -51,12 +56,12 @@ contract Square {
     }
 
     // p = 4*side
-    function getPerimeter() withRadio external view returns(uint) {
+    function getPerimeter() withRadio external override view returns(uint) {
         return 4 * _side;
     }
 
     // a = side^2
-    function getArea() withRadio external view returns(uint) {
+    function getArea() withRadio external override view returns(uint) {
         return _side * _side;
     }
     
@@ -66,7 +71,7 @@ contract Square {
     }
 }
 
-contract RightTriangle {
+contract RightTriangle is iGeometric {
 
     using myMath for uint;
 
@@ -86,13 +91,13 @@ contract RightTriangle {
     }
 
     // p = x + y + h
-    function getPerimeter() withData external view returns(uint) {
+    function getPerimeter() withData external override view returns(uint) {
         uint hip = myMath.sqrt((_base * _base) + (_height * _height));
         return _base + _height + hip;
     }
 
     // a = (b*h)/2
-    function getArea() withData external view returns(uint) {
+    function getArea() withData external override view returns(uint) {
         return (_base * _height) / 2;
     }
 
@@ -100,11 +105,6 @@ contract RightTriangle {
         require(_base > 0 && _height > 0, "No information loaded");
         _;
     }
-}
-
-interface iGeometric {
-    function getPerimeter() external view returns(uint);
-    function getArea() external view returns(uint);
 }
 
 library myMath {
