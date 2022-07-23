@@ -9,7 +9,7 @@ contract Padre {
         nombre = _nombre;
     }
 
-    function mostrarDatos() public virtual returns (string memory) {
+    function mostrarDatos() public virtual returns(string memory) {
         return nombre;
     }
 }
@@ -17,16 +17,14 @@ contract Padre {
 contract Hijo is Padre {
     string apellido;
 
-    constructor(string memory _nombre, string memory _apellido) Padre(_nombre) {
+    constructor (string memory _nombre, string memory _apellido) Padre(_nombre) {
         apellido = _apellido;
     }
 
-    function mostrarDatos() public override returns (string memory) {
+    function mostrarDatos() public override returns(string memory) {
         string memory llamadaPadre = super.mostrarDatos();
-        string memory temporal = (string)(
-            abi.encodePacked(llamadaPadre, " ", apellido)
-        );
-
+        string memory temporal = (string)(abi.encodePacked(llamadaPadre, " ", apellido));
+        
         return temporal;
     }
 }
